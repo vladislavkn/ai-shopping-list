@@ -3,6 +3,7 @@
 import { observer } from "mobx-react-lite";
 import ProductsEditorForm from "./ProductsEditorForm";
 import { useStore } from "@/app/StoreProvider";
+import ProductsEditorTable from "./ProductsEditorTable";
 
 export default observer(function ProductsEditor() {
     const { productEditorStore } = useStore();
@@ -11,6 +12,6 @@ export default observer(function ProductsEditor() {
             Enter the products available in your supermarket. This list will help the AI suggest a weekly menu and generate a shopping list based on what's in stock.
         </p>
         <ProductsEditorForm onSubmit={productEditorStore.addProduct} />
-        {Array.from(productEditorStore.products).join(", ")}
+        <ProductsEditorTable products={Array.from(productEditorStore.products)} onDelete={productEditorStore.deleteProduct} />
     </div>
 })
