@@ -3,6 +3,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import Header from "./(components)/Header";
 import ThemeProvider from "./(components)/ThemeProvider";
+import StoreProvider from "./StoreProvider"
 
 const robotoSans = Roboto({
   weight: ['400', '700'],
@@ -32,7 +33,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          <div className="2xl:container px-4">{children}</div>
+          <div className="2xl:container px-4">
+            <StoreProvider>
+              {children}
+            </StoreProvider>
+          </div>
         </ThemeProvider>
       </body>
     </html>
