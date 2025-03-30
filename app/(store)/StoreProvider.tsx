@@ -1,12 +1,8 @@
 "use client"
 import { createContext, ReactNode, useContext } from 'react';
-import { productEditorStore } from './(products-editor)';
+import rootStore from './rootStore';
 
-const contextValue = {
-    productEditorStore,
-}
-
-const StoreContext = createContext(contextValue);
+const StoreContext = createContext(rootStore);
 
 export type StoreProvider = {
     children: ReactNode;
@@ -14,7 +10,7 @@ export type StoreProvider = {
 
 export default function StoreProvider(props: StoreProvider) {
     return (
-        <StoreContext.Provider value={contextValue}>
+        <StoreContext.Provider value={rootStore}>
             {props.children}
         </StoreContext.Provider>
     );

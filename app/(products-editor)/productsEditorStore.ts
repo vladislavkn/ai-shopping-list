@@ -1,9 +1,12 @@
 import { makeAutoObservable } from 'mobx';
+import { RootStore } from '../(store)/rootStore';
 
-class ProductEditorStore {
+export default class ProductEditorStore {
+    rootStore: RootStore;
     products = new Set<string>();
 
-    constructor() {
+    constructor(rootStore: RootStore) {
+        this.rootStore = rootStore;
         makeAutoObservable(this, {}, { autoBind: true });
     }
 
@@ -40,8 +43,8 @@ class ProductEditorStore {
         this.products.delete(productDescription);
         this.saveProductsToStorage();
     }
+
+    get hasEnoughProducts() {
+        return this.products.size > 3;
+    }
 }
-
-const productEditorStore = new ProductEditorStore();
-
-export default productEditorStore;
