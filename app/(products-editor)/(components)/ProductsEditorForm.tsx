@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 export type ProductsEditorFormProps = {
     onSubmit(productDescription: string): void
@@ -16,6 +16,8 @@ export default function ProductsEditorForm(props: ProductsEditorFormProps) {
         setRandomProduct(getRandomExampleProduct());
     }, [])
 
+    const productDescriptionRef = useRef<HTMLTextAreaElement>(null);
+
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
         const form = event.target as HTMLFormElement;
@@ -23,11 +25,12 @@ export default function ProductsEditorForm(props: ProductsEditorFormProps) {
         if (productDescriptionElement && productDescriptionElement.value.trim()) {
             props.onSubmit(productDescriptionElement.value);
             form.reset();
+            productDescriptionRef.current?.focus();
         }
     }
 
     return <form onSubmit={handleSubmit} className="flex flex-col gap-2 items-end">
-        <Textarea name="productDescription" required placeholder={randomProduct} />
+        <Textarea ref={productDescriptionRef} name="productDescription" required placeholder={randomProduct} />
         <Button size="lg"><Plus /> Add</Button>
     </form>
 }
