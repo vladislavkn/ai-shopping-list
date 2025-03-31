@@ -10,7 +10,7 @@ export default function Header() {
         </div>
         <div className="flex items-center gap-1">
             <Button asChild variant="link" size="sm">
-                <a href="#">
+                <a href="https://github.com/vladislavkn/ai-shopping-list" target="_blank">
                     <Image width={24} height={24} src="/github-mark.svg" alt="Github logo" className="dark:invert" />
                     Github
                 </a>
