@@ -12,7 +12,7 @@ const ProductsEditorTable = ({ products, onDelete }: ProductsEditorTableProps) =
     const [showAll, setShowAll] = useState(false);
 
     if (products.length === 0) {
-        return <p className="text-muted-foreground text-center">No products added yet.</p>;
+        return <p className="text-muted-foreground text-center md:text-left">No products added yet.</p>;
     }
 
     const displayProducts = showAll ? products : products.slice(0, 8);
@@ -20,7 +20,7 @@ const ProductsEditorTable = ({ products, onDelete }: ProductsEditorTableProps) =
 
     return (
         <div className="space-y-2">
-            <Table>
+            <Table className="border border-sidebar-border">
                 <TableHeader>
                     <TableRow className="border-b-sidebar-border">
                         <TableHead className="font-bold">Product Name</TableHead>
@@ -48,7 +48,7 @@ const ProductsEditorTable = ({ products, onDelete }: ProductsEditorTableProps) =
             {hasMoreProducts && (
                 <div className="flex justify-end">
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         onClick={() => setShowAll(!showAll)}
                         className="flex items-center gap-1"

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useIsMobile } from "@/lib/useIsMobile";
 import { Plus } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 
@@ -32,9 +33,11 @@ export default function ProductsEditorForm(props: ProductsEditorFormProps) {
         }
     }
 
+    const isMobile = useIsMobile();
+
     return <form onSubmit={handleSubmit} className="flex flex-col gap-2 items-end">
-        <Textarea ref={productDescriptionRef} name="productDescription" required placeholder={randomProduct} />
-        <Button size="lg"><Plus /> Add</Button>
+        <Textarea ref={productDescriptionRef} name="productDescription" required placeholder={randomProduct} className="sm:text-lg" />
+        <Button variant="secondary" size={isMobile ? "lg" : "default"}><Plus /> Add to the list</Button>
     </form>
 }
 

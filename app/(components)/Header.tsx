@@ -6,7 +6,7 @@ export default function Header() {
     return <header className="flex items-center justify-between p-4">
         <div className="flex items-center gap-1">
             <Image width={48} height={48} src="/ai-shopping-list-log.webp" alt="Logo of ai shopping list: a happy cat with a carrot" />
-            <h1 className="font-bold text-lg">AI shopping list</h1>
+            <h1 className="font-bold text-lg sm:text-xl">AI shopping list</h1>
         </div>
         <div className="flex items-center gap-1">
             <Button asChild variant="link" size="sm">
