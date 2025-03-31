@@ -13,7 +13,7 @@ export default observer(function MealsPlanner() {
 
     useEffect(() => {
         mealsPlannerStore.loadResultMealsFromStorage();
-    }, [])
+    }, [mealsPlannerStore])
 
     const isLoading = mealsPlannerStore.state === 'loading'
     const isError = mealsPlannerStore.state === "error";
