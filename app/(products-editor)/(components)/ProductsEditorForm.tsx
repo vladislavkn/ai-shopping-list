@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 export type ProductsEditorFormProps = {
-    onSubmit(productDescription: string): void
+    onSubmit(productDescription: string): boolean
 }
 
 export default function ProductsEditorForm(props: ProductsEditorFormProps) {
@@ -23,8 +23,11 @@ export default function ProductsEditorForm(props: ProductsEditorFormProps) {
         const form = event.target as HTMLFormElement;
         const productDescriptionElement = form.elements.namedItem('productDescription') as HTMLTextAreaElement;
         if (productDescriptionElement && productDescriptionElement.value.trim()) {
-            props.onSubmit(productDescriptionElement.value);
-            form.reset();
+            const isAdded = props.onSubmit(productDescriptionElement.value);
+            if (isAdded) {
+                form.reset();
+                setRandomProduct(getRandomExampleProduct());
+            }
             productDescriptionRef.current?.focus();
         }
     }

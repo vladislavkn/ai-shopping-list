@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "./(components)/Header";
 import ThemeProvider from "./(components)/ThemeProvider";
 import StoreProvider from "./(store)/StoreProvider"
+import { Toaster } from "@/components/ui/sonner";
 
 const robotoSans = Roboto({
   weight: ['400', '700'],
@@ -38,6 +39,7 @@ export default function RootLayout({
               {children}
             </StoreProvider>
           </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

@@ -31,12 +31,10 @@ export default class ProductEditorStore {
     }
 
     addProduct(productDescription: string) {
-        if (this.products.has(productDescription)) {
-            // TODO: show error notification
-        } else {
-            this.products.add(productDescription);
-            this.saveProductsToStorage();
-        }
+        if (this.products.has(productDescription)) return false;
+        this.products.add(productDescription);
+        this.saveProductsToStorage();
+        return true;
     }
 
     deleteProduct(productDescription: string) {
