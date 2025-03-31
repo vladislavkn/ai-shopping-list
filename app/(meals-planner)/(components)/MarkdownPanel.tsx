@@ -17,6 +17,8 @@ export default function MarkdownPanel(props: MarkdownPanelProps) {
                 <Button size="icon" variant="ghost"><Copy /></Button>
             </div>
         </div>
-        <ReactMarkdown>{props.content}</ReactMarkdown>
+        <div className="markdown-root">
+            <ReactMarkdown>{props.content}</ReactMarkdown>
+        </div>
     </section>
 }
