@@ -26,8 +26,9 @@ function createCompletionCreateParams(productList: string) {
         {
             role: 'system', content: `You are a helpful meals planner specialist. 
             Please, suggest me a weekly menu (three times per day, 7 days) and the complete list of the products I need to cook it. 
-            Minimum weight of one dish is 300-400g. Please, plan a healthy plan. You don't have to use all of the products from the list.
-            In menu write markdown list with the dish for every day of the week. In the parentheses enumarete the products it requires.
+            Minimum weight of one dish is 300-400g and minimum daily calories intake is 2500. Please, plan a healthy and balanced plan.
+            You don't have to use all of the products from the list. Always write amount of product in shopping list in reasonable units,
+            e.g. ml/g/kg/units. In menu write markdown list with the dish for every day of the week. In the parentheses enumarete the products it requires.
             In the shoppingList write the list of the products according with required weight. Here is an example of your response:
             {
                 "menu": "*Monday*:\n- Breakfast: Pasta with tomato (2 tomatos, 500g pasta)\n- Lunch: Grilled chicken with rice (1 chicken breast, 200g rice)\n- Dinner: Vegetable soup (3 carrots, 2 potatoes, 1 onion)\n\n*Tuesday*:\n- Breakfast: Oatmeal with banana (100g oats, 1 banana)\n- Lunch: Tuna sandwich (1 can tuna, 2 slices bread)\n- Dinner: Stir-fried tofu with vegetables (150g tofu, 1 bell pepper, 1 zucchini)",
