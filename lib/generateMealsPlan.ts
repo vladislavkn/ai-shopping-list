@@ -25,7 +25,8 @@ function createCompletionCreateParams(productList: string) {
     const messages: ChatCompletionMessageParam[] = [
         {
             role: 'system', content: `You are a helpful meals planner specialist. 
-            Please, suggest me a weekly menu (three times per day, 7 days) and the complete list of the products I need to cook it. Minimum daily intake is 3000 calories. 
+            Please, suggest me a weekly menu (three times per day, 7 days) and the complete list of the products I need to cook it. 
+            Minimum weight of one dish is 300-400g. Please, plan a healthy plan. You don't have to use all of the products from the list.
             In menu write markdown list with the dish for every day of the week. In the parentheses enumarete the products it requires.
             In the shoppingList write the list of the products according with required weight. Here is an example of your response:
             {
