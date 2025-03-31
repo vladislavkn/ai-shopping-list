@@ -6,6 +6,7 @@ export default class MealsPlannerStore {
     shoppingListContent: string | undefined = undefined;
     menuContent: string | undefined = undefined;
     state: "idle" | "error" | "loading" | "done" = "idle";
+    lastLoadTimestamp: number | undefined = undefined;
 
     constructor(rootStore: RootStore) {
         this.rootStore = rootStore;
@@ -37,7 +38,21 @@ export default class MealsPlannerStore {
         }
     }
 
+    private checkCanLoadResultsMealsPlan() {
+        if (!this.rootStore.productsEditorStore.hasEnoughProducts) {
+            throw Error("Please, add at least three products to the list");
+        }
+        if (this.lastLoadTimestamp) {
+            const timeSinceLastLoad = Date.now() - this.lastLoadTimestamp;
+            if (timeSinceLastLoad < 120_000) {
+                const waitingTimeSeconds = Math.floor((120_000 - timeSinceLastLoad) / 1000)
+                throw Error(`Please, wait ${waitingTimeSeconds}s to load again`);
+            }
+        }
+    }
+
     loadResultsMealsPlan = flow(function* (this: MealsPlannerStore) {
+        this.checkCanLoadResultsMealsPlan();
         this.state = "loading";
         yield new Promise(r => setTimeout(r, 5000));
         // TODO: add actual fetching;
@@ -46,6 +61,7 @@ export default class MealsPlannerStore {
             console.error("Failed to load the meals plan");
         } else {
             this.state = "done";
+            this.lastLoadTimestamp = Date.now();
             this.shoppingListContent = `## Shopping List
 
 ### Produce

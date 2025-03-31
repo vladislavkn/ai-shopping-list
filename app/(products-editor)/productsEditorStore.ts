@@ -43,6 +43,6 @@ export default class ProductEditorStore {
     }
 
     get hasEnoughProducts() {
-        return this.products.size > 3;
+        return this.products.size >= 3;
     }
 }
