@@ -1,5 +1,9 @@
 import { flow, makeAutoObservable } from "mobx";
 import { RootStore } from "../(store)/rootStore";
+import { fetchMealsPlan } from "./mealsPlannerAPI";
+import { MealsPlan } from "@/lib/generateMealsPlan";
+
+const LOAD_TIMEOUT = 600_000
 
 export default class MealsPlannerStore {
     rootStore: RootStore;
@@ -21,6 +25,7 @@ export default class MealsPlannerStore {
                     const savedResultMealsJson = JSON.parse(savedResultMeals);
                     this.menuContent = savedResultMealsJson.menuContent;
                     this.shoppingListContent = savedResultMealsJson.shoppingListContent;
+                    this.lastLoadTimestamp = savedResultMealsJson.lastLoadTimestamp;
                     this.state = "done";
                 } catch (e) {
                     console.error("Failed to load result meals from LocalStorage", e);
@@ -33,7 +38,8 @@ export default class MealsPlannerStore {
         if (typeof window !== 'undefined') {
             localStorage.setItem('resultMeals', JSON.stringify({
                 menuContent: this.menuContent,
-                shoppingListContent: this.shoppingListContent
+                shoppingListContent: this.shoppingListContent,
+                lastLoadTimestamp: this.lastLoadTimestamp
             }));
         }
     }
@@ -44,8 +50,8 @@ export default class MealsPlannerStore {
         }
         if (this.lastLoadTimestamp) {
             const timeSinceLastLoad = Date.now() - this.lastLoadTimestamp;
-            if (timeSinceLastLoad < 120_000) {
-                const waitingTimeSeconds = Math.floor((120_000 - timeSinceLastLoad) / 1000)
+            if (timeSinceLastLoad < LOAD_TIMEOUT) {
+                const waitingTimeSeconds = Math.floor((LOAD_TIMEOUT - timeSinceLastLoad) / 1000)
                 throw Error(`Please, wait ${waitingTimeSeconds}s to load again`);
             }
         }
@@ -54,51 +60,17 @@ export default class MealsPlannerStore {
     loadResultsMealsPlan = flow(function* (this: MealsPlannerStore) {
         this.checkCanLoadResultsMealsPlan();
         this.state = "loading";
-        yield new Promise(r => setTimeout(r, 5000));
-        // TODO: add actual fetching;
-        if (Math.random() > 0.5) {
-            this.state = "error";
-            console.error("Failed to load the meals plan");
-        } else {
+        try {
+            const productList = Array.from(this.rootStore.productsEditorStore.products);
+            const mealsPlanResponse: MealsPlan = yield fetchMealsPlan(productList);
             this.state = "done";
             this.lastLoadTimestamp = Date.now();
-            this.shoppingListContent = `## Shopping List
-
-### Produce
-- 2 onions
-- 1 bunch of carrots
-- 3 bell peppers (red, yellow, green)
-- 1 head of lettuce
-- 2 tomatoes
-`;
-
-            this.menuContent = `## Week Menu
-
-### Monday
-- **Breakfast**: Oatmeal with fruit
-- **Lunch**: Chicken salad sandwich
-- **Dinner**: Spaghetti with meat sauce
-
-### Tuesday
-- **Breakfast**: Yogurt with granola
-- **Lunch**: Leftover spaghetti
-- **Dinner**: Tacos with ground beef
-
-### Wednesday
-- **Breakfast**: Scrambled eggs and toast
-- **Lunch**: Tuna sandwich
-- **Dinner**: Stir-fry with rice
-
-### Thursday
-- **Breakfast**: Smoothie
-- **Lunch**: Soup and salad
-- **Dinner**: Baked chicken with vegetables
-
-### Friday
-- **Breakfast**: Cereal with milk
-- **Lunch**: Leftovers
-- **Dinner**: Homemade pizza`;
+            this.shoppingListContent = mealsPlanResponse.shoppingList;
+            this.menuContent = mealsPlanResponse.menu;
+            this.saveResultMealsToStorage();
+        } catch (e) {
+            this.state = "error";
+            throw e;
         }
-        this.saveResultMealsToStorage();
     })
 }
