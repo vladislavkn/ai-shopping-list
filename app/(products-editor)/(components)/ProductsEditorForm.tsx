@@ -1,23 +1,28 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { useIsMobile } from "@/lib/useIsMobile";
+import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useId, useRef, useState } from "react";
 
 export type ProductsEditorFormProps = {
     onSubmit(productDescription: string): boolean
+    productSuggestions?: string[]
 }
 
 export default function ProductsEditorForm(props: ProductsEditorFormProps) {
     const [randomProduct, setRandomProduct] = useState<string>()
+    const setRandomProductIfSuggestionsLoaded = () => {
+        if (props.productSuggestions) {
+            setRandomProduct(getRandomExampleProduct(props.productSuggestions));
+        }
+    }
 
     useEffect(() => {
-        setRandomProduct(getRandomExampleProduct());
-    }, [])
+        setRandomProductIfSuggestionsLoaded();
+    }, [props.productSuggestions])
 
-    const productDescriptionRef = useRef<HTMLTextAreaElement>(null);
+    const productDescriptionRef = useRef<HTMLInputElement>(null);
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
@@ -27,44 +32,28 @@ export default function ProductsEditorForm(props: ProductsEditorFormProps) {
             const isAdded = props.onSubmit(productDescriptionElement.value);
             if (isAdded) {
                 form.reset();
-                setRandomProduct(getRandomExampleProduct());
+                setRandomProductIfSuggestionsLoaded();
             }
             productDescriptionRef.current?.focus();
         }
     }
 
-    const isMobile = useIsMobile();
+    const datalistId = useId();
 
-    return <form onSubmit={handleSubmit} className="flex flex-col gap-2 items-end">
-        <Textarea ref={productDescriptionRef} name="productDescription" required placeholder={randomProduct} className="sm:text-lg" />
-        <Button variant="secondary" size={isMobile ? "lg" : "default"}><Plus /> Add to the list</Button>
+    return <form onSubmit={handleSubmit} className="flex gap-2 items-center">
+        <Input ref={productDescriptionRef} list={datalistId} name="productDescription" required placeholder={randomProduct} />
+        {props.productSuggestions && (
+            <datalist id={datalistId}>
+                {props.productSuggestions.map((productSuggestion) => (
+                    <option value={productSuggestion} key={productSuggestion} />
+                ))}
+            </datalist>
+        )}
+        <Button variant="secondary" size="default"><Plus /> Add</Button>
     </form>
 }
 
-const EXAMPLE_PRODUCTS = [
-    "Cherry tomatoes",
-    "Spaghetti",
-    "Mozzarella cheese",
-    "Basil leaves",
-    "Canned chickpeas",
-    "Whole grain bread",
-    "Carrot sticks",
-    "Brown rice",
-    "Fresh salmon",
-    "Green bell pepper",
-    "Plain yogurt",
-    "Olive oil",
-    "Sweet potatoes",
-    "Frozen peas",
-    "Red onions",
-    "Black beans",
-    "Oat milk",
-    "Zucchini",
-    "Garlic cloves",
-    "Eggs"
-]
-
-function getRandomExampleProduct(): string {
-    const randomIndex = Math.floor(Math.random() * EXAMPLE_PRODUCTS.length);
-    return EXAMPLE_PRODUCTS[randomIndex];
+function getRandomExampleProduct(productSuggestions: string[]): string {
+    const randomIndex = Math.floor(Math.random() * productSuggestions.length);
+    return productSuggestions[randomIndex];
 }

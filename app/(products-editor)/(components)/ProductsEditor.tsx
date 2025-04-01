@@ -12,6 +12,7 @@ export default observer(function ProductsEditor() {
 
     useEffect(() => {
         productsEditorStore.loadProductsFromStorage();
+        productsEditorStore.loadProductSuggestions();
     }, [productsEditorStore]);
 
     const onAddProduct = (productDescription: string) => {
@@ -22,10 +23,10 @@ export default observer(function ProductsEditor() {
 
     return <div className="space-y-4">
         <h2 className="text-2xl font-bold hidden md:block h-10">Your product list</h2>
-        <p className="text-secondary-foreground leading-6 sm:text-lg">
-            Enter the products available in your supermarket. This list will help the AI suggest a weekly menu and generate a shopping list based on what&apos;s in stock.
+        <p className="text-secondary-foreground leading-6 text-lg">
+            Add your favorite products below, then click 'Generate Meal Plan' to let AI create a personalized menu and shopping list.
         </p>
-        <ProductsEditorForm onSubmit={onAddProduct} />
+        <ProductsEditorForm onSubmit={onAddProduct} productSuggestions={productsEditorStore.productSuggestions} />
         <ProductsEditorTable products={Array.from(productsEditorStore.products)} onDelete={productsEditorStore.deleteProduct} />
     </div>
 })

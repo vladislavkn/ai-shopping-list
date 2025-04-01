@@ -1,14 +1,24 @@
-import { makeAutoObservable } from 'mobx';
+import { flow, makeAutoObservable } from 'mobx';
 import { RootStore } from '../(store)/rootStore';
+import { fetchProductSuggestions } from './productEditorAPI';
 
 export default class ProductEditorStore {
     rootStore: RootStore;
     products = new Set<string>();
+    productSuggestions: string[] | undefined = undefined;
 
     constructor(rootStore: RootStore) {
         this.rootStore = rootStore;
         makeAutoObservable(this, {}, { autoBind: true });
     }
+
+    loadProductSuggestions = flow(function* (this: ProductEditorStore) {
+        try {
+            this.productSuggestions = yield fetchProductSuggestions();
+        } catch (e) {
+            console.error("Failed to fetch product suggestions", e);
+        }
+    })
 
     loadProductsFromStorage() {
         if (typeof window !== 'undefined') {
