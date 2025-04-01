@@ -6,9 +6,11 @@ import { useState } from "react";
 interface ProductsEditorTableProps {
     products: string[];
     onDelete: (product: string) => void;
+    onDeleteAll: () => void
 }
 
-const ProductsEditorTable = ({ products, onDelete }: ProductsEditorTableProps) => {
+const ProductsEditorTable = (props: ProductsEditorTableProps) => {
+    const { products, onDelete, onDeleteAll } = props;
     const [showAll, setShowAll] = useState(false);
 
     if (products.length === 0) {
@@ -45,8 +47,13 @@ const ProductsEditorTable = ({ products, onDelete }: ProductsEditorTableProps) =
                     ))}
                 </TableBody>
             </Table>
-            {hasMoreProducts && (
-                <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
+                {products.length > 3 && (
+                    <Button onClick={onDeleteAll} variant="destructive" size="sm">
+                        <Trash2 /> Clear all
+                    </Button>
+                )}
+                {hasMoreProducts && (
                     <Button
                         variant="ghost"
                         size="sm"
@@ -65,8 +72,9 @@ const ProductsEditorTable = ({ products, onDelete }: ProductsEditorTableProps) =
                             </>
                         )}
                     </Button>
-                </div>
-            )}
+
+                )}
+            </div>
         </div>
     );
 };

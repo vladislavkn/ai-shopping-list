@@ -1,4 +1,4 @@
-import { flow, makeAutoObservable } from 'mobx';
+import { autorun, flow, makeAutoObservable } from 'mobx';
 import { RootStore } from '../(store)/rootStore';
 import { fetchProductSuggestions } from './productEditorAPI';
 
@@ -49,6 +49,11 @@ export default class ProductEditorStore {
 
     deleteProduct(productDescription: string) {
         this.products.delete(productDescription);
+        this.saveProductsToStorage();
+    }
+
+    deleteAllProducts() {
+        this.products.clear();
         this.saveProductsToStorage();
     }
 

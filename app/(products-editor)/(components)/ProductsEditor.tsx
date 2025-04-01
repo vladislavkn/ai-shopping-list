@@ -24,9 +24,9 @@ export default observer(function ProductsEditor() {
     return <div className="space-y-4">
         <h2 className="text-2xl font-bold hidden md:block h-10">Your product list</h2>
         <p className="text-secondary-foreground leading-6 text-lg">
-            Add your favorite products below, then click 'Generate Meal Plan' to let AI create a personalized menu and shopping list.
+            Add your favorite products below, then click &quot;Generate Meal Plan&quot; to let AI create a personalized menu and shopping list.
         </p>
         <ProductsEditorForm onSubmit={onAddProduct} productSuggestions={productsEditorStore.productSuggestions} />
-        <ProductsEditorTable products={Array.from(productsEditorStore.products)} onDelete={productsEditorStore.deleteProduct} />
+        <ProductsEditorTable products={Array.from(productsEditorStore.products)} onDelete={productsEditorStore.deleteProduct} onDeleteAll={productsEditorStore.deleteAllProducts} />
     </div>
 })
