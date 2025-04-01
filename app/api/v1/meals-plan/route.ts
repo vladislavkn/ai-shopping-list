@@ -37,7 +37,10 @@ export async function GET(request: Request) {
         }
         const decodedProductList = decodeURIComponent(encodedProductList);
         console.log(`Starting generation of meals plan #${requestMark} with product list "${decodedProductList.slice(30)}..."`)
-        const mealsPlan = await generateMealsPlan(decodedProductList);
+        const mealsPlan = await generateMealsPlan({
+            productsList: decodedProductList,
+            days: 3
+        });
         console.log(`Generated meals plan #${requestMark} successfully`)
         const response = NextResponse.json(mealsPlan, { status: 200, headers });
         response.cookies.set('lastMealPlanRequest', Date.now().toString(), {
